@@ -1,4 +1,4 @@
-  function setDivColor(color) {
+ function setDivColor(color) {
       const colorDiv = document.getElementById('colorDiv');
       if (colorDiv) {
         colorDiv.style.backgroundColor = color;
@@ -25,26 +25,25 @@
             idx = (idx + 1) % colors.length;
             setDivColor(colors[idx]);
           }, 500);
-
-          // Don't schedule refresh when flag is true
         } else {
-          console.log("Flag is false – setting color to black and scheduling refresh.");
+          console.log("Flag is false – setting color to black.");
           if (colorInterval) clearInterval(colorInterval);
           setDivColor('black');
-          scheduleRefreshIn30Seconds(); // only if false
         }
       } catch (error) {
         console.error("Failed to fetch flag:", error);
-        scheduleRefreshIn30Seconds(); // fallback refresh on error
       }
     }
 
-    function scheduleRefreshIn30Seconds() {
-      console.log("Scheduling refresh in 30 seconds.");
+    function scheduleNextMinuteRefresh() {
+      const now = new Date();
+      const msUntilNextMinute = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+      console.log(`Scheduling refresh in ${msUntilNextMinute / 1000} seconds.`);
       setTimeout(() => {
-        location.reload();
-      }, 30000); // 30 seconds
+        location.reload(); // Full page reload every minute
+      }, msUntilNextMinute);
     }
 
-    // Run
+    // Run on load
     fetchFlag();
+    scheduleNextMinuteRefresh();
