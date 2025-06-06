@@ -1,4 +1,4 @@
-function setDivColor(color) {
+  function setDivColor(color) {
       const colorDiv = document.getElementById('colorDiv');
       if (colorDiv) {
         colorDiv.style.backgroundColor = color;
@@ -35,13 +35,24 @@ function setDivColor(color) {
       }
     }
 
-    function scheduleRefreshEvery15Seconds() {
-      console.log("Scheduling refresh in 15 seconds.");
+    function scheduleNextQuarterMinuteRefresh() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const milliseconds = now.getMilliseconds();
+
+      // Next quarter: 15, 30, 45, 60 (0)
+      const nextQuarterSec = Math.ceil(seconds / 15) * 15;
+      const delaySec = nextQuarterSec - seconds;
+      const delayMs = delaySec * 1000 - milliseconds;
+
+      console.log(`Now: ${now.toLocaleTimeString()}`);
+      console.log(`Scheduling refresh in ${delayMs / 1000} seconds.`);
+
       setTimeout(() => {
-        location.reload(); // Refresh the page every 15 seconds
-      }, 15000);
+        location.reload();
+      }, delayMs);
     }
 
-    // Run on load
+    // On load
     fetchFlag();
-    scheduleRefreshEvery15Seconds();
+    scheduleNextQuarterMinuteRefresh();
